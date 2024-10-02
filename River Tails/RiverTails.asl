@@ -10,11 +10,22 @@ startup
     Assembly.Load(File.ReadAllBytes("Components/asl-help")).CreateInstance("Unity");
     vars.Helper.GameName = "River Tails - Stronger Together";
     vars.Helper.LoadSceneManager = true;
+    vars.Helper.AlertGameTime();
+
+    // Settings
+    settings.Add("autoreset", true, "Reset Automatically");
+    settings.SetToolTip("autoreset", "Automatically reset if you go back to the menu");
+    settings.Add("startonanylevel", false, "Autostart on any level");
+    settings.SetToolTip("startonanylevel", "Start the timer on any level. By default, the timer only starts if you choose the first level.");
 }
 
-onStart {}
+onStart {
+  vars.isStarted = true;
+}
 onSplit {}
-onReset {}
+onReset {
+  vars.isStarted = false;
+}
 
 init
 {
@@ -38,9 +49,11 @@ isLoading
 
 start
 {
-    if (!vars.isStarted && current.activeScene == "1.1" && !current.isLoading) {
-        vars.isStarted = true;
-        return true;
+    if (!vars.isStarted && !current.isLoading && current.activeScene != "New_Menu") {
+        if (settings["startonanylevel"] || current.activeScene == "1.1") {
+            vars.isStarted = true;
+            return true;
+        }
     }
 }
 
@@ -50,7 +63,7 @@ split
 }
 
 reset {
-    if (old.activeScene != "New_Menu" && current.activeScene == "New_Menu") {
+    if (settings["autoreset"] && old.activeScene != "New_Menu" && current.activeScene == "New_Menu") {
         vars.isStarted = false;
         return true;
     }
