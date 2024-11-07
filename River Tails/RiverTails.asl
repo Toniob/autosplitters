@@ -35,7 +35,7 @@ startup
         "07_The King Frog_DELIVERY",
         "08_My beloved leaf_DELIVERY",
         "09_Furple needs help_DELIVERY",
-        "Wolf in the wood DELIVERY",
+        "Wolf in the wood_DELIVERY",
         "10_Canyon_wake_Up_DELIVERY",
         "13_Jellyfish_Mum_DELIVERY",
         "17_Back_DELIVERY",
@@ -60,17 +60,11 @@ init
     });
     vars.isStarted = false;
     vars.Helper.Load();
+    old.activeScene = current.activeScene = "";
 }
 
 update {
-    if (vars.Helper.Scenes.Active.Name != vars.Helper.Scenes.Loaded[0].Name) {
-        print("active scene : "+vars.Helper.Scenes.Active.Name);
-        print("loading scene : "+vars.Helper.Scenes.Loaded[0].Name);
-    }
     current.activeScene = vars.Levels.Contains(vars.Helper.Scenes.Active.Name) || vars.IgnoredScenes.Contains(vars.Helper.Scenes.Active.Name) ? vars.Helper.Scenes.Active.Name : current.activeScene;
-    if (old.activeScene != current.activeScene) {
-        print("New scene : "+current.activeScene);
-    }
 }
 
 isLoading
